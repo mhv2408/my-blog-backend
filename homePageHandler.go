@@ -13,7 +13,22 @@ func homePageHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal("cannot parse the html file: ", err)
 	}
-	err = tmpl.Execute(w, "")
+	blog_data := serveJson()
+	for _, blog := range blog_data {
+		//fmt.Println(blog)
+		data := struct {
+			Title   string
+			Summary string
+			Post    string
+		}{
+			Title:   blog.Title,
+			Summary: blog.Summary,
+			Post:    blog.Post,
+		}
+		//fmt.Print(data)
+		err = tmpl.Execute(w, data)
+	}
+
 	if err != nil {
 		log.Fatal("cannot execute the template: ", err)
 	}
