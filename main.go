@@ -11,5 +11,6 @@ func main() {
 	http.HandleFunc("/", homePageHandler)
 	http.HandleFunc("GET /editor", editorHandler)
 	http.HandleFunc("POST /login", loginHandler)
+	http.HandleFunc("GET /editor/post", postHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
