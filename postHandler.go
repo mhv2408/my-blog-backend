@@ -1,14 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 )
 
 func postHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("you are in create_post!")
 	w.Header().Set("Content-Type", "text/html")
 	tmpl, err := template.ParseFiles("templates/createPost.html")
 

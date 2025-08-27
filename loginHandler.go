@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -30,6 +31,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	// now you login
 	expiration := time.Now().Add(30 * time.Minute) // 30 min expiration time
+	fmt.Println("expiration time: ", expiration)
 	cookie := http.Cookie{
 		Name:    "login",
 		Value:   "login-cookie",
