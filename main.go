@@ -9,7 +9,6 @@ import (
 func main() {
 	fmt.Println("My Blog!!")
 	http.HandleFunc("/", homePageHandler)
-	http.HandleFunc("GET /editor", editorHandler)
 	http.HandleFunc("POST /login", loginHandler)
 	http.HandleFunc("GET /editor/post", loginMiddleware(postHandler))
 	log.Fatal(http.ListenAndServe(":8080", nil))

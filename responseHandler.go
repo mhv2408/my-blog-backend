@@ -10,6 +10,7 @@ import (
 func respondWithJson(w http.ResponseWriter, code int, payload interface{}) {
 	fmt.Println("responding with json")
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(code)
 	data, err := json.Marshal(payload)
 	if err != nil {
