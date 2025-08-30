@@ -1,8 +1,8 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"time"
@@ -11,22 +11,33 @@ import (
 	"github.com/mhv2408/my-blog/internal/auth"
 )
 
-func loginHandler(w http.ResponseWriter, r *http.Request) {
+type LoginDetails struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
 
-	err := r.ParseForm()
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+	var data LoginDetails
+
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&data)
 	if err != nil {
-		log.Fatal("unable to parse the form: ", err)
+		respondWithError(w, http.StatusInternalServerError, "unable to verify login creds", err)
+		return
 	}
 
 	err = godotenv.Load()
 	if err != nil {
-		log.Fatal("cannot load the env file: ", err)
+		respondWithError(w, http.StatusInternalServerError, "unable to verify login creds", err)
+		return
 	}
 	user_name, password := os.Getenv("BLOG_USERNAME"), os.Getenv("BLOG_PASSWORD")
 
-	if r.FormValue("username") != user_name || password != auth.HashPassword(r.FormValue("password")) {
+	fmt.Println(data.Username, data.Password)
+
+	if data.Username != user_name || password != auth.HashPassword(data.Password) {
 		//log.Fatal("you are not authorized")
-		http.ServeFile(w, r, "templates/unauthorized.html")
+		respondWithError(w, http.StatusUnauthorized, "Incorrect creds", nil)
 		return
 	}
 	// now you login
@@ -38,6 +49,6 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		Expires: expiration,
 	}
 	http.SetCookie(w, &cookie)
-	http.Redirect(w, r, "/editor/post", http.StatusFound)
+	respondWithJson(w, http.StatusOK, nil)
 
 }

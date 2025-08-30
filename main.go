@@ -8,8 +8,8 @@ import (
 
 func main() {
 	fmt.Println("My Blog!!")
-	http.HandleFunc("/", homePageHandler)
-	http.HandleFunc("POST /login", loginHandler)
+	http.HandleFunc("/", corsMiddleware(homePageHandler))
+	http.HandleFunc("POST /login", corsMiddleware(loginHandler))
 	http.HandleFunc("GET /editor/post", loginMiddleware(postHandler))
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

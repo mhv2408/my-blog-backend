@@ -2,15 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 )
 
 func respondWithJson(w http.ResponseWriter, code int, payload interface{}) {
-	fmt.Println("responding with json")
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(code)
 	data, err := json.Marshal(payload)
 	if err != nil {
@@ -23,7 +20,6 @@ func respondWithJson(w http.ResponseWriter, code int, payload interface{}) {
 }
 
 func respondWithError(w http.ResponseWriter, code int, msg string, err error) {
-	fmt.Println("responding with error")
 	if err != nil {
 		log.Fatal(err)
 	}
