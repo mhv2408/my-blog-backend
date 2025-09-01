@@ -21,7 +21,8 @@ func respondWithJson(w http.ResponseWriter, code int, payload interface{}) {
 
 func respondWithError(w http.ResponseWriter, code int, msg string, err error) {
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		log.Print(" redirecting to login")
 	}
 	if code > 499 {
 		log.Printf("Responding with 5XX error: %s", msg)

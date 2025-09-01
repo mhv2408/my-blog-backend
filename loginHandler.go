@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -33,8 +32,6 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	user_name, password := os.Getenv("BLOG_USERNAME"), os.Getenv("BLOG_PASSWORD")
 
-	fmt.Println(data.Username, data.Password)
-
 	if data.Username != user_name || password != auth.HashPassword(data.Password) {
 		//log.Fatal("you are not authorized")
 		respondWithError(w, http.StatusUnauthorized, "Incorrect creds", nil)
@@ -42,11 +39,14 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	// now you login
 	expiration := time.Now().Add(30 * time.Minute) // 30 min expiration time
-	fmt.Println("expiration time: ", expiration)
 	cookie := http.Cookie{
-		Name:    "login",
-		Value:   "login-cookie",
-		Expires: expiration,
+		Name:     "login",
+		Value:    "login-cookie",
+		Expires:  expiration,
+		Path:     "/",                  // makes cookie valid for the whole site
+		HttpOnly: true,                 // prevent JS from reading cookie (good for security)
+		Secure:   false,                // set true in production with HTTPS
+		SameSite: http.SameSiteLaxMode, // helps with CSRF protection
 	}
 	http.SetCookie(w, &cookie)
 	respondWithJson(w, http.StatusOK, nil)

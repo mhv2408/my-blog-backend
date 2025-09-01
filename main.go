@@ -10,6 +10,6 @@ func main() {
 	fmt.Println("My Blog!!")
 	http.HandleFunc("/", corsMiddleware(homePageHandler))
 	http.HandleFunc("POST /login", corsMiddleware(loginHandler))
-	http.HandleFunc("GET /editor/post", loginMiddleware(postHandler))
+	http.HandleFunc("GET /editor/post", corsMiddleware(loginMiddleware(postHandler)))
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
