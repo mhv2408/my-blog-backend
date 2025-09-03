@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 
@@ -16,6 +15,7 @@ type postDetails struct {
 }
 
 func (cfg *apiConfig) posts(w http.ResponseWriter, r *http.Request) {
+	//fmt.Println("I am in post handler")
 	var data postDetails
 
 	decoder := json.NewDecoder(r.Body)
@@ -24,7 +24,7 @@ func (cfg *apiConfig) posts(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusInternalServerError, "unable to decode the json", err)
 		return
 	}
-	_, err = cfg.db.CreatePost(context.Background(), database.CreatePostParams{
+	_, err = cfg.db.CreatePost(r.Context(), database.CreatePostParams{
 		Title:   data.Title,
 		Summary: data.Summary,
 		Post:    data.Post,
