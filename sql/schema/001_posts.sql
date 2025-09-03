@@ -6,7 +6,7 @@ CREATE TABLE posts (
     post         TEXT NOT NULL,
     created_at   TIMESTAMP DEFAULT NOW(),
     updated_at   TIMESTAMP DEFAULT NOW(),
-    status       TEXT CHECK (status IN ('draft', 'published')),
+    status       TEXT NOT NULL CHECK (status IN ('draft', 'published')),
     published_at TIMESTAMP NULL
 );
 

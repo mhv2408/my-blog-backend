@@ -17,6 +17,6 @@ type Post struct {
 	Post        string
 	CreatedAt   sql.NullTime
 	UpdatedAt   sql.NullTime
-	Status      sql.NullString
+	Status      string
 	PublishedAt sql.NullTime
 }

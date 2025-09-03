@@ -7,7 +7,6 @@ package database
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createPost = `-- name: CreatePost :one
@@ -27,7 +26,7 @@ type CreatePostParams struct {
 	Title   string
 	Summary string
 	Post    string
-	Status  sql.NullString
+	Status  string
 }
 
 func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (Post, error) {
