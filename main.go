@@ -6,7 +6,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/mhv2408/my-blog/internal/database"
@@ -14,6 +16,17 @@ import (
 
 type apiConfig struct {
 	db *database.Queries
+}
+
+type Post struct {
+	Id          uuid.UUID `json:"id"`
+	Title       string    `json:"title"`
+	Summary     string    `json:"summary"`
+	Post        string    `json:"post"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+	Status      string    `json:"status"`
+	PublishedAt string    `json:"published_at"`
 }
 
 func main() {
