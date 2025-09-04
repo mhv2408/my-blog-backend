@@ -57,5 +57,7 @@ func main() {
 
 	http.HandleFunc("GET /editor/dashboard", corsMiddleware(loginMiddleware(apiCfg.dashboardHandler)))
 
+	http.HandleFunc("DELETE /editor/post/{postId}", corsMiddleware(loginMiddleware(apiCfg.deletePostHandler)))
+
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
