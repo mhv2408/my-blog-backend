@@ -1,27 +1,20 @@
 package main
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/google/uuid"
 )
 
 func (cfg *apiConfig) postByIdHandler(w http.ResponseWriter, r *http.Request) {
-	type payload struct {
-		Id uuid.UUID `json:"id"`
-	}
-	decoder := json.NewDecoder(r.Body)
+	PostId, err := uuid.Parse(r.PathValue("postId"))
 
-	var data payload
-
-	err := decoder.Decode(&data)
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "cannot decode the json for post id", err)
+		respondWithError(w, http.StatusInternalServerError, "cannot parse the psot id", err)
 		return
 	}
 
-	dbPost, err := cfg.db.GetPostByID(r.Context(), data.Id)
+	dbPost, err := cfg.db.GetPostByID(r.Context(), PostId)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "cannot find the post with the id", err)
 		return
