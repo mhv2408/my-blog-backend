@@ -17,7 +17,7 @@ VALUES(
     $2,
     $3,
     $4,
-    CASE WHEN status='publish' THEN NOW() ELSE NULL END
+    CASE WHEN $4='publish' THEN NOW() ELSE NULL END
 )
 RETURNING posts_id, title, summary, post, created_at, updated_at, status, published_at
 `

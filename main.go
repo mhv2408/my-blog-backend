@@ -37,8 +37,11 @@ func main() {
 
 	http.HandleFunc("/", corsMiddleware(homePageHandler))
 	http.HandleFunc("POST /login", corsMiddleware(loginHandler))
+	//http.HandleFunc("GET editor/")
 	http.HandleFunc("GET /editor/post", corsMiddleware(loginMiddleware(writePostHandler)))
 	http.HandleFunc("POST /editor/post", corsMiddleware(loginMiddleware(apiCfg.posts)))
+
+	http.HandleFunc("GET /editor/dashboard", corsMiddleware(loginMiddleware(apiCfg.dashboardHandler)))
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

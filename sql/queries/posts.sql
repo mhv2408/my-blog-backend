@@ -6,6 +6,6 @@ VALUES(
     $2,
     $3,
     $4,
-    CASE WHEN status='publish' THEN NOW() ELSE NULL END
+    CASE WHEN $4='publish' THEN NOW() ELSE NULL END
 )
 RETURNING *;
