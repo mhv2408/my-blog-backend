@@ -1,8 +1,8 @@
-package main
+package middleware
 
 import "net/http"
 
-func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
+func CorsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	// set all the CORS permissions for the pre-flight responses
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")

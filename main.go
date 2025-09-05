@@ -12,6 +12,7 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/mhv2408/my-blog/internal/database"
+	"github.com/mhv2408/my-blog/middleware"
 )
 
 type apiConfig struct {
@@ -48,17 +49,18 @@ func main() {
 		db: database.New(dbConn),
 	}
 
-	http.HandleFunc("GET /get-blogs", corsMiddleware(apiCfg.postsHandler))
-	http.HandleFunc("POST /login", corsMiddleware(loginHandler))
+	http.HandleFunc("GET /get-blogs", middleware.CorsMiddleware(apiCfg.postsHandler))
+
+	http.HandleFunc("POST /login", middleware.CorsMiddleware(loginHandler))
 	//http.HandleFunc("GET editor/")
-	http.HandleFunc("GET /editor/post", corsMiddleware(loginMiddleware(writePostHandler)))
-	http.HandleFunc("POST /editor/post", corsMiddleware(loginMiddleware(apiCfg.posts)))
-	http.HandleFunc("GET /editor/post/{postId}", corsMiddleware(loginMiddleware(apiCfg.postByIdHandler)))
+	http.HandleFunc("GET /editor/post", middleware.CorsMiddleware(middleware.LoginMiddleware(writePostHandler)))
+	http.HandleFunc("POST /editor/post", middleware.CorsMiddleware(middleware.LoginMiddleware(apiCfg.posts)))
+	http.HandleFunc("GET /editor/post/{postId}", middleware.CorsMiddleware(middleware.LoginMiddleware(apiCfg.postByIdHandler)))
 
-	http.HandleFunc("GET /editor/dashboard", corsMiddleware(loginMiddleware(apiCfg.dashboardHandler)))
+	http.HandleFunc("GET /editor/dashboard", middleware.CorsMiddleware(middleware.LoginMiddleware(apiCfg.dashboardHandler)))
 
-	http.HandleFunc("DELETE /editor/post/{postId}", corsMiddleware(loginMiddleware(apiCfg.deletePostHandler)))
-	http.HandleFunc("PATCH /editor/post/{postId}/status", corsMiddleware(loginMiddleware(apiCfg.updateStatusHandler)))
+	http.HandleFunc("DELETE /editor/post/{postId}", middleware.CorsMiddleware(middleware.LoginMiddleware(apiCfg.deletePostHandler)))
+	http.HandleFunc("PATCH /editor/post/{postId}/status", middleware.CorsMiddleware(middleware.LoginMiddleware(apiCfg.updateStatusHandler)))
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
