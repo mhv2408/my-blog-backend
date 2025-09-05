@@ -12,7 +12,7 @@ func LoginMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		if err != nil {
 			// cookie not found
 			// so redirect to login
-			//respondWithError(w, http.StatusUnauthorized, "not authorized to access this page", err)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 		// cookie is set, now move next
