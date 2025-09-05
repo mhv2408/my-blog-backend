@@ -48,7 +48,7 @@ func main() {
 		db: database.New(dbConn),
 	}
 
-	http.HandleFunc("GET /get-blogs", corsMiddleware(homePageHandler))
+	http.HandleFunc("GET /get-blogs", corsMiddleware(apiCfg.postsHandler))
 	http.HandleFunc("POST /login", corsMiddleware(loginHandler))
 	//http.HandleFunc("GET editor/")
 	http.HandleFunc("GET /editor/post", corsMiddleware(loginMiddleware(writePostHandler)))

@@ -1,6 +1,6 @@
 package main
 
-type BlogPost struct {
+type BlogJsonPost struct {
 	Id       int    `json:"id"`
 	Title    string `json:"title"`
 	Excerpt  string `json:"excerpt"`
@@ -9,9 +9,9 @@ type BlogPost struct {
 	Slug     string `json:"slug"`
 }
 
-func serveJson() []BlogPost {
+func serveJson() []BlogJsonPost {
 
-	posts := []BlogPost{
+	posts := []BlogJsonPost{
 		{
 			Id:       1,
 			Title:    "Understanding REST APIs",
