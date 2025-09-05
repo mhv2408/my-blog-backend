@@ -48,7 +48,7 @@ func main() {
 		db: database.New(dbConn),
 	}
 
-	http.HandleFunc("/", corsMiddleware(homePageHandler))
+	http.HandleFunc("GET /get-blogs", corsMiddleware(homePageHandler))
 	http.HandleFunc("POST /login", corsMiddleware(loginHandler))
 	//http.HandleFunc("GET editor/")
 	http.HandleFunc("GET /editor/post", corsMiddleware(loginMiddleware(writePostHandler)))
@@ -58,6 +58,7 @@ func main() {
 	http.HandleFunc("GET /editor/dashboard", corsMiddleware(loginMiddleware(apiCfg.dashboardHandler)))
 
 	http.HandleFunc("DELETE /editor/post/{postId}", corsMiddleware(loginMiddleware(apiCfg.deletePostHandler)))
+	http.HandleFunc("PATCH /editor/post/{postId}/status", corsMiddleware(loginMiddleware(apiCfg.updateStatusHandler)))
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

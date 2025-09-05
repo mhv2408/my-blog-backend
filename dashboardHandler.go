@@ -14,7 +14,7 @@ type SummaryPost struct {
 	Status  string    `json:"status"`
 }
 
-func GetApiPosts(dbPosts []database.GetPostsRow) []SummaryPost {
+func GetApiPosts(dbPosts []database.GetPostsDashboardRow) []SummaryPost {
 	res := make([]SummaryPost, 0, len(dbPosts))
 
 	for _, post := range dbPosts {
@@ -29,7 +29,7 @@ func GetApiPosts(dbPosts []database.GetPostsRow) []SummaryPost {
 }
 
 func (cfg *apiConfig) dashboardHandler(w http.ResponseWriter, r *http.Request) {
-	dbPosts, err := cfg.db.GetPosts(r.Context())
+	dbPosts, err := cfg.db.GetPostsDashboard(r.Context())
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "unable to retrive the posts", err)
 		return
