@@ -13,6 +13,7 @@ type BlogPost struct {
 	Title       string    `json:"title"`
 	Summary     string    `json:"summary"`
 	PublishedAt time.Time `json:"published_at"`
+	Slug        string    `json:"slug"`
 }
 
 func getPosts(dbPosts []database.GetPostsRow) []BlogPost {
@@ -23,6 +24,7 @@ func getPosts(dbPosts []database.GetPostsRow) []BlogPost {
 			Title:       post.Title,
 			Summary:     post.Summary,
 			PublishedAt: post.PublishedAt.Time,
+			Slug:        post.Slug,
 		})
 	}
 	return res

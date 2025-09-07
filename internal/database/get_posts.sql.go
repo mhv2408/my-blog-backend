@@ -14,7 +14,7 @@ import (
 
 const getPosts = `-- name: GetPosts :many
 
-SELECT posts_id, title, summary, published_at
+SELECT posts_id, title, summary, published_at, slug
 FROM posts
 WHERE status='publish'
 `
@@ -24,6 +24,7 @@ type GetPostsRow struct {
 	Title       string
 	Summary     string
 	PublishedAt sql.NullTime
+	Slug        string
 }
 
 func (q *Queries) GetPosts(ctx context.Context) ([]GetPostsRow, error) {
@@ -40,6 +41,7 @@ func (q *Queries) GetPosts(ctx context.Context) ([]GetPostsRow, error) {
 			&i.Title,
 			&i.Summary,
 			&i.PublishedAt,
+			&i.Slug,
 		); err != nil {
 			return nil, err
 		}
