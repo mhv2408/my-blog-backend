@@ -28,6 +28,7 @@ type Post struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 	Status      string    `json:"status"`
 	PublishedAt string    `json:"published_at"`
+	Slug        string    `json:"slug"`
 }
 
 func main() {
@@ -50,6 +51,7 @@ func main() {
 	}
 
 	http.HandleFunc("GET /get-blogs", middleware.CorsMiddleware(apiCfg.postsHandler))
+	http.HandleFunc("GET /get-post/{slug}", middleware.CorsMiddleware(apiCfg.postBySlugHandler))
 
 	http.HandleFunc("POST /login", middleware.CorsMiddleware(loginHandler))
 	//http.HandleFunc("GET editor/")
