@@ -13,7 +13,7 @@ import (
 
 const getPostByID = `-- name: GetPostByID :one
 
-SELECT posts_id, title, summary, post, created_at, updated_at, status, published_at 
+SELECT posts_id, title, summary, post, created_at, updated_at, status, published_at, slug 
 FROM posts
 WHERE posts_id=$1
 `
@@ -30,6 +30,7 @@ func (q *Queries) GetPostByID(ctx context.Context, postsID uuid.UUID) (Post, err
 		&i.UpdatedAt,
 		&i.Status,
 		&i.PublishedAt,
+		&i.Slug,
 	)
 	return i, err
 }

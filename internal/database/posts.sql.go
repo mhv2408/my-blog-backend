@@ -11,15 +11,16 @@ import (
 
 const createPost = `-- name: CreatePost :one
 
-INSERT INTO posts(title, summary, post,status, published_at)
+INSERT INTO posts(title, summary, post,status, published_at,slug)
 VALUES(
     $1,
     $2,
     $3,
     $4,
-    CASE WHEN $4='publish' THEN NOW() ELSE NULL END
+    CASE WHEN $4='publish' THEN NOW() ELSE NULL END,
+    $5
 )
-RETURNING posts_id, title, summary, post, created_at, updated_at, status, published_at
+RETURNING posts_id, title, summary, post, created_at, updated_at, status, published_at, slug
 `
 
 type CreatePostParams struct {
@@ -27,6 +28,7 @@ type CreatePostParams struct {
 	Summary string
 	Post    string
 	Status  string
+	Slug    string
 }
 
 func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (Post, error) {
@@ -35,6 +37,7 @@ func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (Post, e
 		arg.Summary,
 		arg.Post,
 		arg.Status,
+		arg.Slug,
 	)
 	var i Post
 	err := row.Scan(
@@ -46,6 +49,7 @@ func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (Post, e
 		&i.UpdatedAt,
 		&i.Status,
 		&i.PublishedAt,
+		&i.Slug,
 	)
 	return i, err
 }

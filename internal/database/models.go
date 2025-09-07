@@ -19,4 +19,5 @@ type Post struct {
 	UpdatedAt   sql.NullTime
 	Status      string
 	PublishedAt sql.NullTime
+	Slug        string
 }
