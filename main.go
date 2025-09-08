@@ -49,20 +49,21 @@ func main() {
 	apiCfg := &apiConfig{
 		db: database.New(dbConn),
 	}
+	mux := http.NewServeMux()
 
-	http.HandleFunc("GET /get-blogs", middleware.CorsMiddleware(apiCfg.postsHandler))
-	http.HandleFunc("GET /get-post/{slug}", middleware.CorsMiddleware(apiCfg.postBySlugHandler))
+	mux.HandleFunc("GET /get-blogs", apiCfg.postsHandler)
+	mux.HandleFunc("GET /get-post/{slug}", apiCfg.postBySlugHandler)
 
-	http.HandleFunc("POST /login", middleware.CorsMiddleware(loginHandler))
+	mux.HandleFunc("POST /login", loginHandler)
 	//http.HandleFunc("GET editor/")
-	http.HandleFunc("GET /editor/post", middleware.CorsMiddleware(middleware.LoginMiddleware(writePostHandler)))
-	http.HandleFunc("POST /editor/post", middleware.CorsMiddleware(middleware.LoginMiddleware(apiCfg.posts)))
-	http.HandleFunc("GET /editor/post/{postId}", middleware.CorsMiddleware(middleware.LoginMiddleware(apiCfg.postByIdHandler)))
+	mux.HandleFunc("GET /editor/post", middleware.LoginMiddleware(writePostHandler))
+	mux.HandleFunc("POST /editor/post", middleware.LoginMiddleware(apiCfg.posts))
+	mux.HandleFunc("GET /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.postByIdHandler))
 
-	http.HandleFunc("GET /editor/dashboard", middleware.CorsMiddleware(middleware.LoginMiddleware(apiCfg.dashboardHandler)))
+	mux.HandleFunc("GET /editor/dashboard", middleware.LoginMiddleware(apiCfg.dashboardHandler))
 
-	http.HandleFunc("DELETE /editor/post/{postId}", middleware.CorsMiddleware(middleware.LoginMiddleware(apiCfg.deletePostHandler)))
-	http.HandleFunc("PATCH /editor/post/{postId}/status", middleware.CorsMiddleware(middleware.LoginMiddleware(apiCfg.updateStatusHandler)))
+	mux.HandleFunc("DELETE /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.deletePostHandler))
+	mux.HandleFunc("PATCH /editor/post/{postId}/status", middleware.LoginMiddleware(apiCfg.updateStatusHandler))
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", middleware.CorsMiddleware(mux)))
 }
