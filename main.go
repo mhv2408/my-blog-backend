@@ -59,7 +59,7 @@ func main() {
 	mux.HandleFunc("GET /editor/post", middleware.LoginMiddleware(writePostHandler))
 	mux.HandleFunc("POST /editor/post", middleware.LoginMiddleware(apiCfg.posts))
 	mux.HandleFunc("GET /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.postByIdHandler))
-	mux.HandleFunc("PUT /editor/post", middleware.LoginMiddleware(apiCfg.updatePostHandler))
+	mux.HandleFunc("PUT /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.updatePostHandler))
 
 	mux.HandleFunc("GET /editor/dashboard", middleware.LoginMiddleware(apiCfg.dashboardHandler))
 

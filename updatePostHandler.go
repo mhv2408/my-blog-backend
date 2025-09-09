@@ -9,23 +9,28 @@ import (
 )
 
 func (cfg *apiConfig) updatePostHandler(w http.ResponseWriter, r *http.Request) {
+	post_id, err := uuid.Parse(r.PathValue("postId"))
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "cannot find the post_id from path value URL", err)
+		return
+	}
+
 	type payload struct {
-		Id      uuid.UUID `json:"id"`
-		Title   string    `json:"title"`
-		Summary string    `json:"summary"`
-		Post    string    `json:"post"`
-		Status  string    `json:"status"`
+		Title   string `json:"title"`
+		Summary string `json:"summary"`
+		Post    string `json:"post"`
+		Status  string `json:"status"`
 	}
 	var data payload
 	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&data)
+	err = decoder.Decode(&data)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "cannot parse the json payload", err)
 		return
 	}
 
 	cfg.db.UpdatePost(r.Context(), database.UpdatePostParams{
-		PostsID: data.Id,
+		PostsID: post_id,
 		Title:   data.Title,
 		Summary: data.Summary,
 		Post:    data.Post,
