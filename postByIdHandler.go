@@ -10,7 +10,7 @@ func (cfg *apiConfig) postByIdHandler(w http.ResponseWriter, r *http.Request) {
 	PostId, err := uuid.Parse(r.PathValue("postId"))
 
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "cannot parse the psot id", err)
+		respondWithError(w, http.StatusInternalServerError, "cannot parse the post id", err)
 		return
 	}
 

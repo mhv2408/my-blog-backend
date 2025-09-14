@@ -33,7 +33,10 @@ type Post struct {
 
 func main() {
 	fmt.Println("My Blog!!")
-	godotenv.Load(".env")
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("unable to load the DB URL")
+	}
 
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
@@ -66,5 +69,13 @@ func main() {
 	mux.HandleFunc("DELETE /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.deletePostHandler))
 	mux.HandleFunc("PATCH /editor/post/{postId}/status", middleware.LoginMiddleware(apiCfg.updateStatusHandler))
 
-	log.Fatal(http.ListenAndServe(":8080", middleware.CorsMiddleware(mux)))
+	srv := &http.Server{
+		Addr:              "8080",
+		Handler:           middleware.CorsMiddleware(mux),
+		ReadTimeout:       5 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+
+	log.Fatal(srv.ListenAndServe())
 }

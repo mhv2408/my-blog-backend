@@ -29,12 +29,16 @@ func (cfg *apiConfig) updatePostHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	cfg.db.UpdatePost(r.Context(), database.UpdatePostParams{
+	err = cfg.db.UpdatePost(r.Context(), database.UpdatePostParams{
 		PostsID: post_id,
 		Title:   data.Title,
 		Summary: data.Summary,
 		Post:    data.Post,
 		Status:  data.Status,
 	})
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "unable to update the post", err)
+		return
+	}
 	respondWithJson(w, http.StatusOK, nil)
 }

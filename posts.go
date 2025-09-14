@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"testing"
 
 	"github.com/gosimple/slug"
 	"github.com/mhv2408/my-blog/internal/database"
@@ -37,5 +38,8 @@ func (cfg *apiConfig) posts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	respondWithJson(w, http.StatusCreated, nil)
+
+}
+func TestPosts(t *testing.T) {
 
 }
