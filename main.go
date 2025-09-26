@@ -54,20 +54,20 @@ func main() {
 	}
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /get-blogs", apiCfg.blogsHandler)
-	mux.HandleFunc("GET /get-blogs/{slug}", apiCfg.blogByIdHandler)
+	mux.HandleFunc("GET /blogs", apiCfg.blogsHandler)
+	mux.HandleFunc("GET /blogs/{slug}", apiCfg.blogByIdHandler)
 
 	mux.HandleFunc("POST /login", loginHandler)
 	//http.HandleFunc("GET editor/")
 	mux.HandleFunc("GET /editor/blog", middleware.LoginMiddleware(writeBlogHandler))
 	mux.HandleFunc("POST /editor/blog", middleware.LoginMiddleware(apiCfg.blogs))
-	mux.HandleFunc("GET /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.blogByIdHandler))
-	mux.HandleFunc("PUT /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.updateBlogHandler))
+	mux.HandleFunc("GET /editor/blog/{blogId}", middleware.LoginMiddleware(apiCfg.blogByIdHandler))
+	mux.HandleFunc("PUT /editor/blog/{blogId}", middleware.LoginMiddleware(apiCfg.updateBlogHandler))
 
 	mux.HandleFunc("GET /editor/dashboard", middleware.LoginMiddleware(apiCfg.dashboardHandler))
 
-	mux.HandleFunc("DELETE /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.deleteBlogHandler))
-	mux.HandleFunc("PATCH /editor/post/{postId}/status", middleware.LoginMiddleware(apiCfg.updateStatusHandler))
+	mux.HandleFunc("DELETE /editor/blog/{blogId}", middleware.LoginMiddleware(apiCfg.deleteBlogHandler))
+	mux.HandleFunc("PATCH /editor/blog/{blogId}/status", middleware.LoginMiddleware(apiCfg.updateStatusHandler))
 
 	srv := &http.Server{
 		Addr:              "localhost:8080",
