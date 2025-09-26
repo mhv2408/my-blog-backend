@@ -9,3 +9,4 @@
 # Output of `go build`
 *.test
 *.out
+my-blog
