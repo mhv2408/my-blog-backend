@@ -37,7 +37,7 @@ func (cfg *apiConfig) updateBlogHandler(w http.ResponseWriter, r *http.Request) 
 		Status:  data.Status,
 	})
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "unable to update the post", err)
+		respondWithError(w, http.StatusInternalServerError, "unable to update the blog", err)
 		return
 	}
 	respondWithJson(w, http.StatusOK, nil)

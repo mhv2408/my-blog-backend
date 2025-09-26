@@ -55,7 +55,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /blogs", apiCfg.blogsHandler)
-	mux.HandleFunc("GET /blogs/{slug}", apiCfg.blogByIdHandler)
+	mux.HandleFunc("GET /blogs/{slug}", apiCfg.blogBySlugHandler)
 
 	mux.HandleFunc("POST /login", loginHandler)
 	//http.HandleFunc("GET editor/")
