@@ -14,12 +14,12 @@ type SummaryPost struct {
 	Status  string    `json:"status"`
 }
 
-func GetApiPosts(dbPosts []database.GetPostsDashboardRow) []SummaryPost {
+func GetApiPosts(dbPosts []database.GetBlogsDashboardRow) []SummaryPost {
 	res := make([]SummaryPost, 0, len(dbPosts))
 
 	for _, post := range dbPosts {
 		res = append(res, SummaryPost{
-			Id:      post.PostsID,
+			Id:      post.BlogID,
 			Title:   post.Title,
 			Summary: post.Summary,
 			Status:  post.Status,
@@ -29,9 +29,9 @@ func GetApiPosts(dbPosts []database.GetPostsDashboardRow) []SummaryPost {
 }
 
 func (cfg *apiConfig) dashboardHandler(w http.ResponseWriter, r *http.Request) {
-	dbPosts, err := cfg.db.GetPostsDashboard(r.Context())
+	dbPosts, err := cfg.db.GetBlogsDashboard(r.Context())
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "unable to retrive the posts", err)
+		respondWithError(w, http.StatusInternalServerError, "unable to retrive the blogs", err)
 		return
 	}
 	apiPosts := GetApiPosts(dbPosts)

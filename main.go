@@ -19,7 +19,7 @@ type apiConfig struct {
 	db *database.Queries
 }
 
-type Post struct {
+type Blog struct {
 	Id          uuid.UUID `json:"id"`
 	Title       string    `json:"title"`
 	Summary     string    `json:"summary"`
@@ -27,7 +27,7 @@ type Post struct {
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 	Status      string    `json:"status"`
-	PublishedAt string    `json:"published_at"`
+	PublishedAt time.Time `json:"published_at"`
 	Slug        string    `json:"slug"`
 }
 
@@ -54,13 +54,13 @@ func main() {
 	}
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /get-blogs", apiCfg.postsHandler)
+	mux.HandleFunc("GET /get-blogs", apiCfg.blogsHandler)
 	mux.HandleFunc("GET /get-post/{slug}", apiCfg.postBySlugHandler)
 
 	mux.HandleFunc("POST /login", loginHandler)
 	//http.HandleFunc("GET editor/")
 	mux.HandleFunc("GET /editor/post", middleware.LoginMiddleware(writePostHandler))
-	mux.HandleFunc("POST /editor/post", middleware.LoginMiddleware(apiCfg.posts))
+	mux.HandleFunc("POST /editor/post", middleware.LoginMiddleware(apiCfg.blogs))
 	mux.HandleFunc("GET /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.postByIdHandler))
 	mux.HandleFunc("PUT /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.updatePostHandler))
 
@@ -70,7 +70,7 @@ func main() {
 	mux.HandleFunc("PATCH /editor/post/{postId}/status", middleware.LoginMiddleware(apiCfg.updateStatusHandler))
 
 	srv := &http.Server{
-		Addr:              "8080",
+		Addr:              "localhost:8080",
 		Handler:           middleware.CorsMiddleware(mux),
 		ReadTimeout:       5 * time.Second,
 		WriteTimeout:      10 * time.Second,

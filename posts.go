@@ -16,7 +16,7 @@ type postDetails struct {
 	Status  string `json:"status"`
 }
 
-func (cfg *apiConfig) posts(w http.ResponseWriter, r *http.Request) {
+func (cfg *apiConfig) blogs(w http.ResponseWriter, r *http.Request) {
 	var data postDetails
 
 	decoder := json.NewDecoder(r.Body)
@@ -25,10 +25,10 @@ func (cfg *apiConfig) posts(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusInternalServerError, "unable to decode the json", err)
 		return
 	}
-	_, err = cfg.db.CreatePost(r.Context(), database.CreatePostParams{
+	_, err = cfg.db.CreateBlog(r.Context(), database.CreateBlogParams{
 		Title:   data.Title,
 		Summary: data.Summary,
-		Post:    data.Post,
+		Content: data.Post,
 		Status:  data.Status,
 		Slug:    slug.Make(data.Title),
 	})

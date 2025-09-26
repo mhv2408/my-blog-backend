@@ -14,15 +14,15 @@ func (cfg *apiConfig) postByIdHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dbPost, err := cfg.db.GetPostByID(r.Context(), PostId)
+	dbPost, err := cfg.db.GetBlogByID(r.Context(), PostId)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "cannot find the post with the id", err)
 		return
 	}
-	respondWithJson(w, http.StatusOK, Post{
-		Id:      dbPost.PostsID,
+	respondWithJson(w, http.StatusOK, Blog{
+		Id:      dbPost.BlogID,
 		Title:   dbPost.Title,
 		Summary: dbPost.Summary,
-		Post:    dbPost.Post,
+		Post:    dbPost.Content,
 	})
 }

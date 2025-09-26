@@ -27,9 +27,9 @@ func (cfg *apiConfig) updateStatusHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	err = cfg.db.UpdatePostStatus(r.Context(), database.UpdatePostStatusParams{
-		PostsID: postId,
-		Status:  data.Status,
+	err = cfg.db.UpdateBlogStatus(r.Context(), database.UpdateBlogStatusParams{
+		BlogID: postId,
+		Status: data.Status,
 	})
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "unable to update the status in DB", err)

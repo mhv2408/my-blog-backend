@@ -29,11 +29,11 @@ func (cfg *apiConfig) updatePostHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	err = cfg.db.UpdatePost(r.Context(), database.UpdatePostParams{
-		PostsID: post_id,
+	err = cfg.db.UpdateBlog(r.Context(), database.UpdateBlogParams{
+		BlogID:  post_id,
 		Title:   data.Title,
 		Summary: data.Summary,
-		Post:    data.Post,
+		Content: data.Post,
 		Status:  data.Status,
 	})
 	if err != nil {

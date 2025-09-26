@@ -13,7 +13,7 @@ func (cfg *apiConfig) deletePostHandler(w http.ResponseWriter, r *http.Request) 
 		respondWithError(w, http.StatusInternalServerError, "unable to parse the postId", err)
 		return
 	}
-	err = cfg.db.DeletePostById(r.Context(), postId)
+	err = cfg.db.DeleteBlogById(r.Context(), postId)
 
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "unable to delete the post", err)

@@ -10,11 +10,11 @@ import (
 	"github.com/google/uuid"
 )
 
-type Post struct {
-	PostsID     uuid.UUID
+type Blog struct {
+	BlogID      uuid.UUID
 	Title       string
 	Summary     string
-	Post        string
+	Content     string
 	CreatedAt   sql.NullTime
 	UpdatedAt   sql.NullTime
 	Status      string

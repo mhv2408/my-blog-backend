@@ -7,17 +7,17 @@ import (
 func (cfg *apiConfig) postBySlugHandler(w http.ResponseWriter, r *http.Request) {
 	post_slug := r.PathValue("slug")
 
-	dbPost, err := cfg.db.GetPostBySlug(r.Context(), post_slug)
+	dbPost, err := cfg.db.GetBlogBySlug(r.Context(), post_slug)
 
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "cannot retrieve post from slug", err)
 		return
 	}
-	respondWithJson(w, http.StatusOK, Post{
-		Id:          dbPost.PostsID,
+	respondWithJson(w, http.StatusOK, Blog{
+		Id:          dbPost.BlogID,
 		Title:       dbPost.Title,
-		Post:        dbPost.Post,
-		PublishedAt: dbPost.PublishedAt.Time.Format("YYYY-MM-DD"),
+		Post:        dbPost.Content,
+		PublishedAt: dbPost.PublishedAt.Time,
 		Slug:        dbPost.Slug,
 	})
 }
