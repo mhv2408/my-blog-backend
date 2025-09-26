@@ -7,35 +7,35 @@ import (
 	"github.com/mhv2408/my-blog/internal/database"
 )
 
-type SummaryPost struct {
+type SummaryBlog struct {
 	Id      uuid.UUID `json:"id"`
 	Title   string    `json:"title"`
 	Summary string    `json:"summary"`
 	Status  string    `json:"status"`
 }
 
-func GetApiPosts(dbPosts []database.GetBlogsDashboardRow) []SummaryPost {
-	res := make([]SummaryPost, 0, len(dbPosts))
+func GetApiBlogs(dbBlogs []database.GetBlogsDashboardRow) []SummaryBlog {
+	res := make([]SummaryBlog, 0, len(dbBlogs))
 
-	for _, post := range dbPosts {
-		res = append(res, SummaryPost{
-			Id:      post.BlogID,
-			Title:   post.Title,
-			Summary: post.Summary,
-			Status:  post.Status,
+	for _, blog := range dbBlogs {
+		res = append(res, SummaryBlog{
+			Id:      blog.BlogID,
+			Title:   blog.Title,
+			Summary: blog.Summary,
+			Status:  blog.Status,
 		})
 	}
 	return res
 }
 
 func (cfg *apiConfig) dashboardHandler(w http.ResponseWriter, r *http.Request) {
-	dbPosts, err := cfg.db.GetBlogsDashboard(r.Context())
+	dbBlogs, err := cfg.db.GetBlogsDashboard(r.Context())
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "unable to retrive the blogs", err)
 		return
 	}
-	apiPosts := GetApiPosts(dbPosts)
+	apiBlogs := GetApiBlogs(dbBlogs)
 
-	respondWithJson(w, http.StatusOK, apiPosts)
+	respondWithJson(w, http.StatusOK, apiBlogs)
 
 }

@@ -8,17 +8,17 @@ import (
 	"github.com/mhv2408/my-blog/internal/database"
 )
 
-func (cfg *apiConfig) updatePostHandler(w http.ResponseWriter, r *http.Request) {
-	post_id, err := uuid.Parse(r.PathValue("postId"))
+func (cfg *apiConfig) updateBlogHandler(w http.ResponseWriter, r *http.Request) {
+	blog_id, err := uuid.Parse(r.PathValue("blogId"))
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "cannot find the post_id from path value URL", err)
+		respondWithError(w, http.StatusInternalServerError, "cannot find the blog from path value URL", err)
 		return
 	}
 
 	type payload struct {
 		Title   string `json:"title"`
 		Summary string `json:"summary"`
-		Post    string `json:"post"`
+		Content string `json:"content"`
 		Status  string `json:"status"`
 	}
 	var data payload
@@ -30,10 +30,10 @@ func (cfg *apiConfig) updatePostHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	err = cfg.db.UpdateBlog(r.Context(), database.UpdateBlogParams{
-		BlogID:  post_id,
+		BlogID:  blog_id,
 		Title:   data.Title,
 		Summary: data.Summary,
-		Content: data.Post,
+		Content: data.Content,
 		Status:  data.Status,
 	})
 	if err != nil {

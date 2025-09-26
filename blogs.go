@@ -3,21 +3,20 @@ package main
 import (
 	"encoding/json"
 	"net/http"
-	"testing"
 
 	"github.com/gosimple/slug"
 	"github.com/mhv2408/my-blog/internal/database"
 )
 
-type postDetails struct {
+type blogDetails struct {
 	Title   string `json:"title"`
 	Summary string `json:"summary"`
-	Post    string `json:"post"`
+	Content string `json:"content"`
 	Status  string `json:"status"`
 }
 
 func (cfg *apiConfig) blogs(w http.ResponseWriter, r *http.Request) {
-	var data postDetails
+	var data blogDetails
 
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&data)
@@ -28,18 +27,15 @@ func (cfg *apiConfig) blogs(w http.ResponseWriter, r *http.Request) {
 	_, err = cfg.db.CreateBlog(r.Context(), database.CreateBlogParams{
 		Title:   data.Title,
 		Summary: data.Summary,
-		Content: data.Post,
+		Content: data.Content,
 		Status:  data.Status,
 		Slug:    slug.Make(data.Title),
 	})
 
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "Coudn't create the post", err)
+		respondWithError(w, http.StatusInternalServerError, "Coudn't create the blog", err)
 		return
 	}
 	respondWithJson(w, http.StatusCreated, nil)
-
-}
-func TestPosts(t *testing.T) {
 
 }

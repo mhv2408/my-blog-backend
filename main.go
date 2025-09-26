@@ -23,7 +23,7 @@ type Blog struct {
 	Id          uuid.UUID `json:"id"`
 	Title       string    `json:"title"`
 	Summary     string    `json:"summary"`
-	Post        string    `json:"post"`
+	Content     string    `json:"content"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 	Status      string    `json:"status"`
@@ -55,18 +55,18 @@ func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /get-blogs", apiCfg.blogsHandler)
-	mux.HandleFunc("GET /get-post/{slug}", apiCfg.postBySlugHandler)
+	mux.HandleFunc("GET /get-blogs/{slug}", apiCfg.blogByIdHandler)
 
 	mux.HandleFunc("POST /login", loginHandler)
 	//http.HandleFunc("GET editor/")
-	mux.HandleFunc("GET /editor/post", middleware.LoginMiddleware(writePostHandler))
-	mux.HandleFunc("POST /editor/post", middleware.LoginMiddleware(apiCfg.blogs))
-	mux.HandleFunc("GET /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.postByIdHandler))
-	mux.HandleFunc("PUT /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.updatePostHandler))
+	mux.HandleFunc("GET /editor/blog", middleware.LoginMiddleware(writeBlogHandler))
+	mux.HandleFunc("POST /editor/blog", middleware.LoginMiddleware(apiCfg.blogs))
+	mux.HandleFunc("GET /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.blogByIdHandler))
+	mux.HandleFunc("PUT /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.updateBlogHandler))
 
 	mux.HandleFunc("GET /editor/dashboard", middleware.LoginMiddleware(apiCfg.dashboardHandler))
 
-	mux.HandleFunc("DELETE /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.deletePostHandler))
+	mux.HandleFunc("DELETE /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.deleteBlogHandler))
 	mux.HandleFunc("PATCH /editor/post/{postId}/status", middleware.LoginMiddleware(apiCfg.updateStatusHandler))
 
 	srv := &http.Server{

@@ -9,10 +9,10 @@ import (
 )
 
 func (cfg *apiConfig) updateStatusHandler(w http.ResponseWriter, r *http.Request) {
-	postId, err := uuid.Parse(r.PathValue("postId"))
+	blogId, err := uuid.Parse(r.PathValue("blogId"))
 
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "cannot parse post_id from url", err)
+		respondWithError(w, http.StatusInternalServerError, "cannot parse blog_id from url", err)
 		return
 	}
 
@@ -28,7 +28,7 @@ func (cfg *apiConfig) updateStatusHandler(w http.ResponseWriter, r *http.Request
 	}
 
 	err = cfg.db.UpdateBlogStatus(r.Context(), database.UpdateBlogStatusParams{
-		BlogID: postId,
+		BlogID: blogId,
 		Status: data.Status,
 	})
 	if err != nil {
