@@ -35,7 +35,7 @@ func main() {
 	fmt.Println("My Blog!!")
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatal("unable to load the DB URL")
+		log.Fatal("unable to load the env file")
 	}
 
 	dbURL := os.Getenv("DATABASE_URL")
