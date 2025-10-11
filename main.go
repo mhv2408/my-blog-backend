@@ -38,6 +38,11 @@ func main() {
 		log.Fatal("unable to load the env file")
 	}
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("port must be set")
+	}
+
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
 		log.Fatal("DB_URL must be set")
@@ -70,7 +75,7 @@ func main() {
 	mux.HandleFunc("PATCH /editor/blog/{blogId}/status", middleware.LoginMiddleware(apiCfg.updateStatusHandler))
 
 	srv := &http.Server{
-		Addr:              "localhost:8080",
+		Addr:              ":" + port,
 		Handler:           middleware.CorsMiddleware(mux),
 		ReadTimeout:       5 * time.Second,
 		WriteTimeout:      10 * time.Second,
