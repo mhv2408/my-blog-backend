@@ -33,9 +33,10 @@ type Blog struct {
 
 func main() {
 	fmt.Println("My Blog!!")
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal("unable to load the env file")
+	if os.Getenv("DOCKER_ENV") == "" {
+		if err := godotenv.Load(); err != nil {
+			log.Fatal("unable to load the env file")
+		}
 	}
 
 	port := os.Getenv("PORT")
