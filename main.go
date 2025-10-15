@@ -41,7 +41,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		log.Fatal("port must be set")
+		port = "8080"
 	}
 
 	dbURL := os.Getenv("DATABASE_URL")
