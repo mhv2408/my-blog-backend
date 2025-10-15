@@ -19,21 +19,30 @@ type apiConfig struct {
 	db *database.Queries
 }
 
-type Post struct {
+type Blog struct {
 	Id          uuid.UUID `json:"id"`
 	Title       string    `json:"title"`
 	Summary     string    `json:"summary"`
-	Post        string    `json:"post"`
+	Content     string    `json:"content"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 	Status      string    `json:"status"`
-	PublishedAt string    `json:"published_at"`
+	PublishedAt time.Time `json:"published_at"`
 	Slug        string    `json:"slug"`
 }
 
 func main() {
 	fmt.Println("My Blog!!")
-	godotenv.Load(".env")
+	if os.Getenv("DOCKER_ENV") == "" {
+		if err := godotenv.Load(); err != nil {
+			log.Fatal("unable to load the env file")
+		}
+	}
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("port must be set")
+	}
 
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
@@ -51,20 +60,28 @@ func main() {
 	}
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /get-blogs", apiCfg.postsHandler)
-	mux.HandleFunc("GET /get-post/{slug}", apiCfg.postBySlugHandler)
+	mux.HandleFunc("GET /blogs", apiCfg.blogsHandler)
+	mux.HandleFunc("GET /blogs/{slug}", apiCfg.blogBySlugHandler)
 
 	mux.HandleFunc("POST /login", loginHandler)
 	//http.HandleFunc("GET editor/")
-	mux.HandleFunc("GET /editor/post", middleware.LoginMiddleware(writePostHandler))
-	mux.HandleFunc("POST /editor/post", middleware.LoginMiddleware(apiCfg.posts))
-	mux.HandleFunc("GET /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.postByIdHandler))
-	mux.HandleFunc("PUT /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.updatePostHandler))
+	mux.HandleFunc("GET /editor/blog", middleware.LoginMiddleware(writeBlogHandler))
+	mux.HandleFunc("POST /editor/blog", middleware.LoginMiddleware(apiCfg.blogs))
+	mux.HandleFunc("GET /editor/blog/{blogId}", middleware.LoginMiddleware(apiCfg.blogByIdHandler))
+	mux.HandleFunc("PUT /editor/blog/{blogId}", middleware.LoginMiddleware(apiCfg.updateBlogHandler))
 
 	mux.HandleFunc("GET /editor/dashboard", middleware.LoginMiddleware(apiCfg.dashboardHandler))
 
-	mux.HandleFunc("DELETE /editor/post/{postId}", middleware.LoginMiddleware(apiCfg.deletePostHandler))
-	mux.HandleFunc("PATCH /editor/post/{postId}/status", middleware.LoginMiddleware(apiCfg.updateStatusHandler))
+	mux.HandleFunc("DELETE /editor/blog/{blogId}", middleware.LoginMiddleware(apiCfg.deleteBlogHandler))
+	mux.HandleFunc("PATCH /editor/blog/{blogId}/status", middleware.LoginMiddleware(apiCfg.updateStatusHandler))
 
-	log.Fatal(http.ListenAndServe(":8080", middleware.CorsMiddleware(mux)))
+	srv := &http.Server{
+		Addr:              ":" + port,
+		Handler:           middleware.CorsMiddleware(mux),
+		ReadTimeout:       5 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+
+	log.Fatal(srv.ListenAndServe())
 }

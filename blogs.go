@@ -8,15 +8,15 @@ import (
 	"github.com/mhv2408/my-blog/internal/database"
 )
 
-type postDetails struct {
+type blogDetails struct {
 	Title   string `json:"title"`
 	Summary string `json:"summary"`
-	Post    string `json:"post"`
+	Content string `json:"content"`
 	Status  string `json:"status"`
 }
 
-func (cfg *apiConfig) posts(w http.ResponseWriter, r *http.Request) {
-	var data postDetails
+func (cfg *apiConfig) blogs(w http.ResponseWriter, r *http.Request) {
+	var data blogDetails
 
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&data)
@@ -24,16 +24,16 @@ func (cfg *apiConfig) posts(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusInternalServerError, "unable to decode the json", err)
 		return
 	}
-	_, err = cfg.db.CreatePost(r.Context(), database.CreatePostParams{
+	_, err = cfg.db.CreateBlog(r.Context(), database.CreateBlogParams{
 		Title:   data.Title,
 		Summary: data.Summary,
-		Post:    data.Post,
+		Content: data.Content,
 		Status:  data.Status,
 		Slug:    slug.Make(data.Title),
 	})
 
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "Coudn't create the post", err)
+		respondWithError(w, http.StatusInternalServerError, "Coudn't create the blog", err)
 		return
 	}
 	respondWithJson(w, http.StatusCreated, nil)

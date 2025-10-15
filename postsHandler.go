@@ -16,28 +16,28 @@ type BlogPost struct {
 	Slug        string    `json:"slug"`
 }
 
-func getPosts(dbPosts []database.GetPostsRow) []BlogPost {
-	res := make([]BlogPost, 0, len(dbPosts))
-	for _, post := range dbPosts {
+func getBlogs(dbBlogs []database.GetBlogsRow) []BlogPost {
+	res := make([]BlogPost, 0, len(dbBlogs))
+	for _, blog := range dbBlogs {
 		res = append(res, BlogPost{
-			Id:          post.PostsID,
-			Title:       post.Title,
-			Summary:     post.Summary,
-			PublishedAt: post.PublishedAt.Time,
-			Slug:        post.Slug,
+			Id:          blog.BlogID,
+			Title:       blog.Title,
+			Summary:     blog.Summary,
+			PublishedAt: blog.PublishedAt.Time,
+			Slug:        blog.Slug,
 		})
 	}
 	return res
 }
 
-func (cfg *apiConfig) postsHandler(w http.ResponseWriter, r *http.Request) {
-	db_posts, err := cfg.db.GetPosts(r.Context())
+func (cfg *apiConfig) blogsHandler(w http.ResponseWriter, r *http.Request) {
+	db_blogs, err := cfg.db.GetBlogs(r.Context())
 
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "cannot get the posts", err)
+		respondWithError(w, http.StatusInternalServerError, "cannot get the blogs", err)
 		return
 	}
 
-	respondWithJson(w, http.StatusOK, getPosts(db_posts))
+	respondWithJson(w, http.StatusOK, getBlogs(db_blogs))
 
 }

@@ -25,10 +25,11 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = godotenv.Load()
-	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "unable to verify login creds", err)
-		return
+	if os.Getenv("DOCKER_ENV") == "" { // running locally
+		if err := godotenv.Load(); err != nil {
+			respondWithError(w, http.StatusInternalServerError, "unable to verify login creds", err)
+			return
+		}
 	}
 	user_name, password := os.Getenv("BLOG_USERNAME"), os.Getenv("BLOG_PASSWORD")
 

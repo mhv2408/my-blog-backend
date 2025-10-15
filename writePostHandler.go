@@ -4,6 +4,6 @@ import (
 	"net/http"
 )
 
-func writePostHandler(w http.ResponseWriter, r *http.Request) {
+func writeBlogHandler(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusOK, nil)
 }
