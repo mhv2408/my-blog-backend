@@ -44,10 +44,10 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		Name:     "login",
 		Value:    "login-cookie",
 		Expires:  expiration,
-		Path:     "/",                  // makes cookie valid for the whole site
-		HttpOnly: true,                 // prevent JS from reading cookie (good for security)
-		Secure:   false,                // set true in production with HTTPS
-		SameSite: http.SameSiteLaxMode, // helps with CSRF protection
+		Path:     "/",                   // makes cookie valid for the whole site
+		HttpOnly: true,                  // prevent JS from reading cookie (good for security)
+		Secure:   true,                  // set true in production with HTTPS
+		SameSite: http.SameSiteNoneMode, // allow cross-site with https
 	}
 	http.SetCookie(w, &cookie)
 	respondWithJson(w, http.StatusOK, nil)
